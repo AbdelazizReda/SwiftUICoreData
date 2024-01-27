@@ -11,22 +11,28 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+//    @FetchRequest(
+//        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+//        animation: .default)
+    
+    @FetchRequest(entity: Fruite.entity(), sortDescriptors: [])   
+    var fruites: FetchedResults<Fruite>
+
+    
+//    private var items: FetchedResults<Item>
+
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
+                ForEach(fruites) { fruitee in
+                    
+                    Text(fruitee.titleOne ?? "")
+                    
                 }
                 .onDelete(perform: deleteItems)
+                .navigationTitle("Fruits")
+
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -39,7 +45,9 @@ struct ContentView: View {
                 }
             }
             Text("Select an item")
+                
         }
+        
     }
 
     private func addItem() {
@@ -60,7 +68,7 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+//            offsets.map { items[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()
